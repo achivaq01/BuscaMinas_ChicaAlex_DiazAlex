@@ -39,7 +39,17 @@ class LayoutIntroState extends State<LayoutIntro> {
             padding: const EdgeInsets.all(20),
             child: CupertinoButton.filled(
               onPressed: () {
-                appData.resetGame();
+                //appData.resetGame();
+                appData.setCells();
+
+                if(appData.board.isEmpty || appData.gameIsOver) {
+                  appData.setMines(0);
+                  appData.newBoard(0);
+                  appData.setCells();
+                }
+
+                appData.gameIsOver = false;
+
                 Navigator.of(context).pushNamed('play');
               },
               child: const Text('Començar el joc'),

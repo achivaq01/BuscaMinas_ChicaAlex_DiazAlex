@@ -34,9 +34,9 @@ class WidgetTresRatllaState extends State<WidgetTresRatlla> {
         final int col =
         (details.localPosition.dx / (context.size!.width / 3)).floor();
 
-        appData.playMove(row, col);
         setState(() {}); // Actualitza la vista
       },
+
       child: Center(
         child: SizedBox(
           width: MediaQuery.of(context)
@@ -53,15 +53,53 @@ class WidgetTresRatllaState extends State<WidgetTresRatlla> {
               } else {
                 return GestureDetector(
                   onTapUp: (TapUpDetails details) {
-                    final int row =
-                    (details.localPosition.dy / (context.size!.height / 3))
-                        .floor();
-                    final int col =
-                    (details.localPosition.dx / (context.size!.width / 3))
-                        .floor();
+                    if (appData.gameIsOver) {
+                      return;
+                    }
+                    Size size = context.size!;
+                    int dimensions = appData.gridDimensions;
 
-                    appData.playMove(row, col);
-                    setState(() {}); // Actualitza la vista
+                    double smallerDimension = size.width < size.height ? size.width : size.height;
+                    double cellDimension = smallerDimension / (dimensions);
+                    double offsetX = (size.width - (cellDimension * (dimensions))) / 2;
+                    double offsetY = (size.height - (cellDimension * dimensions)) / 2;
+
+                    final double tappedX = details.localPosition.dx - offsetX;
+                    final double tappedY = details.localPosition.dy - offsetY;
+
+                    final int col = (tappedX / cellDimension).floor();
+                    final int row = (tappedY / cellDimension).floor();
+
+                    if(col >= 0 && row >= 0) {
+                      appData.revealCells(row, col);
+                      appData.board[row][col][1] = 'C';
+                      appData.isTheGameOver();
+
+                      setState(() {});
+                    }
+                  },
+                  onSecondaryTapUp: (TapUpDetails details) {
+                    if (appData.gameIsOver) {
+                      return;
+                    }
+                    Size size = context.size!;
+                    int dimensions = appData.gridDimensions;
+
+                    double smallerDimension = size.width < size.height ? size.width : size.height;
+                    double cellDimension = smallerDimension / (dimensions);
+                    double offsetX = (size.width - (cellDimension * (dimensions))) / 2;
+                    double offsetY = (size.height - (cellDimension * dimensions)) / 2;
+
+                    final double tappedX = details.localPosition.dx - offsetX;
+                    final double tappedY = details.localPosition.dy - offsetY;
+
+                    final int col = (tappedX / cellDimension).floor();
+                    final int row = (tappedY / cellDimension).floor();
+
+                    if(col >= 0 && row >= 0) {
+                      appData.board[row][col][1] = 'M';
+                      setState(() {});
+                    }
                   },
                   child: SizedBox(
                     width: MediaQuery.of(context)

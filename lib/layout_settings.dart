@@ -1,4 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:minesweeper/app.dart';
+import 'package:minesweeper/app_data.dart';
+import 'package:provider/provider.dart';
 
 class LayoutSettings extends StatefulWidget {
   @override
@@ -69,7 +72,10 @@ class _LayoutSettingsState extends State<LayoutSettings> {
             CupertinoButton.filled(
               child: Text("Aplicar Configuración"),
               onPressed: () {
-                  
+                AppData appData = Provider.of<AppData>(context, listen: false);
+                appData.setMines(_selectedMineCount);
+                appData.newBoard(_selectedBoardSize);
+                Navigator.of(context).pushNamed('intro');
               },
             ),
           ],

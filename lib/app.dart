@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'layout_intro.dart';
 import 'layout_settings.dart';
 import 'layout_play.dart';
+import 'app_data.dart';
 
 // Main application widget
 class App extends StatefulWidget {
@@ -14,6 +15,7 @@ class App extends StatefulWidget {
 // Main application state
 class AppState extends State<App> {
   // Definir el contingut del widget 'App'
+
   @override
   Widget build(BuildContext context) {
     // Farem servir la base 'Cupertino'

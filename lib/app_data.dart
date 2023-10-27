@@ -1,16 +1,17 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
+
 class AppData with ChangeNotifier {
   // App status
-  String colorPlayer = "Verd";
-  String colorOpponent = "Taronja";
+  String winner = "Game over you lost!";
 
   int mineAmount = 0;
   int gridDimensions = 0;
 
-  List<List<String>> board = [];
+  List<List<List<String>>> board = [];
   bool gameIsOver = false;
   String gameWinner = '-';
 
@@ -18,90 +19,144 @@ class AppData with ChangeNotifier {
   ui.Image? imageOpponent;
   bool imagesReady = false;
 
-  void resetGame() {
-    board = [
-      ['-', '-', '-'],
-      ['-', '-', '-'],
-      ['-', '-', '-'],
-    ];
-    gameIsOver = false;
-    gameWinner = '-';
-  }
+  void newBoard(int type){
+    int dimensions;
 
-  // Fa una jugada, primer el jugador després la maquina
-  void playMove(int row, int col) {
-    if (board[row][col] == '-') {
-      board[row][col] = 'X';
-      checkGameWinner();
-      if (gameWinner == '-') {
-        machinePlay();
-      }
+    switch(type){
+      case 0: dimensions = 9; break;
+      case 1: dimensions = 15; break;
+      default: dimensions = 9; break;
     }
+
+    board = List.generate(dimensions, (i) => List.generate(dimensions, (j) => List.generate(2, (k) => "-")));
+    gridDimensions = board.length;
   }
 
-  // Fa una jugada de la màquina, només busca la primera posició lliure
-  void machinePlay() {
-    bool moveMade = false;
+  int nearMines(int row, int col) {
+    int mines = 0;
 
-    // Buscar una casella lliure '-'
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
-        if (board[i][j] == '-') {
-          board[i][j] = 'O';
-          moveMade = true;
-          break;
+    List<List<int>> positions = [
+      [-1, -1], [-1, 0], [-1, 1],
+      [0, -1], /*[0, 0],*/ [0, 1],
+      [1, -1], [1, 0], [1, 1]
+    ];
+
+    for (List<int> position in positions) {
+      int newRow = row + position[0];
+      int newCol = col + position[1];
+
+      if (newRow >= 0 && newRow < gridDimensions && newCol >= 0 && newCol < gridDimensions) {
+        if (board[newRow][newCol][0] == '*') {
+          mines++;
         }
       }
-      if (moveMade) break;
     }
 
-    checkGameWinner();
+    return mines;
   }
 
-  // Comprova si el joc ja té un tres en ratlla
-  // No comprova la situació d'empat
-  void checkGameWinner() {
-    for (int i = 0; i < 3; i++) {
-      // Comprovar files
-      if (board[i][0] == board[i][1] &&
-          board[i][1] == board[i][2] &&
-          board[i][0] != '-') {
+
+  void setMines(int type){
+    switch(type){
+      case 0: mineAmount = 5; break;
+      case 1: mineAmount = 10; break;
+      case 2: mineAmount = 20; break;
+      default: mineAmount = 5; break;
+    }
+  }
+
+  bool checkBomb(int row, int col){
+    if (board[row][col][0] == '*') {
+      return true;
+    }
+    return false;
+  }
+
+  void isTheGameOver() {
+    int markedMines = 0;
+    int clearedMines = 0;
+
+    for(int i = 0; i<gridDimensions;i++) {
+      print(mineAmount);
+      print(markedMines);
+      for(int j = 0; j<gridDimensions;j++) {
+        if(board[i][j] == '*' && board[i][j][1] == 'C') {
+          clearedMines++;
+        }
+
+        if(board[i][j] == '*' && board[i][j][1] == 'M') {
+          markedMines++;
+        }
+        /*
+        if(board[i][j][0] == '*' && board[i][j][1] == 'C') {
+          gameIsOver = true;
+          return;
+        } else if (board[i][j][0] == '*' && board[i][j][1] == 'M');
+          markedMines ++;
+
+
+          if(markedMines == mineAmount) {
+            gameIsOver = true;
+            winner = "Congratulations you won!";
+          }
+          */
+      }
+
+      if (clearedMines > 0) {
         gameIsOver = true;
-        gameWinner = board[i][0];
         return;
       }
 
-      // Comprovar columnes
-      if (board[0][i] == board[1][i] &&
-          board[1][i] == board[2][i] &&
-          board[0][i] != '-') {
+      if (markedMines == mineAmount) {
         gameIsOver = true;
-        gameWinner = board[0][i];
+        winner = "Congratulations, you won!";
         return;
       }
     }
-
-    // Comprovar diagonal principal
-    if (board[0][0] == board[1][1] &&
-        board[1][1] == board[2][2] &&
-        board[0][0] != '-') {
-      gameIsOver = true;
-      gameWinner = board[0][0];
-      return;
-    }
-
-    // Comprovar diagonal secundària
-    if (board[0][2] == board[1][1] &&
-        board[1][1] == board[2][0] &&
-        board[0][2] != '-') {
-      gameIsOver = true;
-      gameWinner = board[0][2];
-      return;
-    }
-
-    // No hi ha guanyador, torna '-'
-    gameWinner = '-';
   }
+
+  void setCells(){
+    int totalCells = gridDimensions * gridDimensions;
+    int mines = mineAmount;
+
+    while(mines > 0) {
+      for (int i = 0; i < gridDimensions; i++) {
+        for (int j = 0; j < gridDimensions; j++) {
+          if(Random().nextInt(totalCells) < mineAmount && board[i][j][0]!="*"){
+            board[i][j][0] = "*";
+            mines--;
+          }
+        }
+      }
+    }
+  }
+
+  void revealCells(int row, int col) {
+    if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
+      return;
+    }
+
+    if (board[row][col][0] == '*' || board[row][col][1] == 'C') {
+      return;
+    }
+
+    board[row][col][1] = 'C';
+
+    int nearbyMines = nearMines(row, col);
+    if (nearbyMines > 0) {
+      return;
+    }
+
+    revealCells(row - 1, col - 1);
+    revealCells(row - 1, col);
+    revealCells(row - 1, col + 1);
+    revealCells(row, col - 1);
+    revealCells(row, col + 1);
+    revealCells(row + 1, col - 1);
+    revealCells(row + 1, col);
+    revealCells(row + 1, col + 1);
+  }
+
 
   // Carrega les imatges per dibuixar-les al Canvas
   Future<void> loadImages(BuildContext context) async {
