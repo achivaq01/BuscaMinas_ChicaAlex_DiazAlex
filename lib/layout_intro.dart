@@ -40,15 +40,14 @@ class LayoutIntroState extends State<LayoutIntro> {
             child: CupertinoButton.filled(
               onPressed: () {
                 //appData.resetGame();
-                appData.setCells();
-
                 if(appData.board.isEmpty || appData.gameIsOver) {
+                  appData.setCells();
                   appData.setMines(0);
                   appData.newBoard(0);
                   appData.setCells();
+                  appData.gameIsOver = false;
+                  appData.winner = 'Game over, you lost!';
                 }
-
-                appData.gameIsOver = false;
 
                 Navigator.of(context).pushNamed('play');
               },

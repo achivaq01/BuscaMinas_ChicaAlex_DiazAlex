@@ -44,6 +44,10 @@ class WidgetTresRatllaPainter extends CustomPainter {
 
   }
 
+  void drawTimer(Canvas canvas){
+
+  }
+
   void paintCell(Canvas canvas, double x0, double y0, int dimension, int row, int column, Size size){
     Rect cell = Rect.fromLTWH(x0, y0, dimension.toDouble(), dimension.toDouble());
     Paint paint;
@@ -55,10 +59,10 @@ class WidgetTresRatllaPainter extends CustomPainter {
     }
 
     switch(appData.board[row][column][1]) {
-      case '-': paint = Paint()..color = Color.fromARGB(230, 31, 0, 33);
+      case '-': paint = Paint()..color = Color.fromARGB(250, 150, 2, 90);
       case 'C': paint = Paint()..color = Color.fromARGB(255, 240, 247, 245);
       case 'M': paint = Paint()..color = Color.fromARGB(255, 255, 249, 59);
-      default: paint = Paint()..color = Color.fromARGB(255, 31, 0, 33);
+      default: paint = Paint()..color = Color.fromARGB(250, 150, 2, 90);
     }
 
     canvas.drawRect(cell, paint);

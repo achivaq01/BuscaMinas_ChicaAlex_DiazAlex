@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class AppData with ChangeNotifier {
   // App status
-  String winner = "Game over you lost!";
+  String winner = "Game over, you lost!";
 
   int mineAmount = 0;
   int gridDimensions = 0;
@@ -99,16 +99,6 @@ class AppData with ChangeNotifier {
     int mines = 0;
 
     while(mines < mineAmount) {
-      /*
-      for (int i = 0; i < gridDimensions; i++) {
-        for (int j = 0; j < gridDimensions; j++) {
-          if(Random().nextInt(totalCells) < mineAmount && board[i][j][0]!="*"){
-            board[i][j][0] = "*";
-            mines++;
-          }
-        }
-      }
-     */
       int randomRow = Random().nextInt(board.length);
       int randomColumn = Random().nextInt(board[0].length);
 

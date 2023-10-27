@@ -75,6 +75,7 @@ class _LayoutSettingsState extends State<LayoutSettings> {
                 AppData appData = Provider.of<AppData>(context, listen: false);
                 appData.setMines(_selectedMineCount);
                 appData.newBoard(_selectedBoardSize);
+                appData.setCells();
                 Navigator.of(context).pushNamed('intro');
               },
             ),
