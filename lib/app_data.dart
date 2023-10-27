@@ -96,9 +96,10 @@ class AppData with ChangeNotifier {
 
   void setCells(){
     int totalCells = gridDimensions * gridDimensions;
-    int mines = 1;
+    int mines = 0;
 
     while(mines < mineAmount) {
+      /*
       for (int i = 0; i < gridDimensions; i++) {
         for (int j = 0; j < gridDimensions; j++) {
           if(Random().nextInt(totalCells) < mineAmount && board[i][j][0]!="*"){
@@ -106,6 +107,14 @@ class AppData with ChangeNotifier {
             mines++;
           }
         }
+      }
+     */
+      int randomRow = Random().nextInt(board.length);
+      int randomColumn = Random().nextInt(board[0].length);
+
+      if(board[randomRow][randomColumn][0] != '*') {
+        board[randomRow][randomColumn][0] = '*';
+        mines++;
       }
     }
   }
