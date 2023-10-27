@@ -74,57 +74,36 @@ class AppData with ChangeNotifier {
 
   void isTheGameOver() {
     int markedMines = 0;
-    int clearedMines = 0;
 
     for(int i = 0; i<gridDimensions;i++) {
       print(mineAmount);
-      print(markedMines);
       for(int j = 0; j<gridDimensions;j++) {
-        if(board[i][j] == '*' && board[i][j][1] == 'C') {
-          clearedMines++;
-        }
-
-        if(board[i][j] == '*' && board[i][j][1] == 'M') {
-          markedMines++;
-        }
-        /*
         if(board[i][j][0] == '*' && board[i][j][1] == 'C') {
           gameIsOver = true;
           return;
-        } else if (board[i][j][0] == '*' && board[i][j][1] == 'M');
-          markedMines ++;
+        } else if (board[i][j][0] == '*' && board[i][j][1] == 'M') {
+          markedMines++;
 
-
-          if(markedMines == mineAmount) {
+          if(markedMines >= mineAmount) {
+            winner = "Congratulations, you won!";
             gameIsOver = true;
-            winner = "Congratulations you won!";
           }
-          */
-      }
+        }
 
-      if (clearedMines > 0) {
-        gameIsOver = true;
-        return;
-      }
-
-      if (markedMines == mineAmount) {
-        gameIsOver = true;
-        winner = "Congratulations, you won!";
-        return;
       }
     }
   }
 
   void setCells(){
     int totalCells = gridDimensions * gridDimensions;
-    int mines = mineAmount;
+    int mines = 1;
 
-    while(mines > 0) {
+    while(mines < mineAmount) {
       for (int i = 0; i < gridDimensions; i++) {
         for (int j = 0; j < gridDimensions; j++) {
           if(Random().nextInt(totalCells) < mineAmount && board[i][j][0]!="*"){
             board[i][j][0] = "*";
-            mines--;
+            mines++;
           }
         }
       }

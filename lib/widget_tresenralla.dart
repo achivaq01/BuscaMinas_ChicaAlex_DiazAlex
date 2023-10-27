@@ -98,6 +98,7 @@ class WidgetTresRatllaState extends State<WidgetTresRatlla> {
 
                     if(col >= 0 && row >= 0) {
                       appData.board[row][col][1] = 'M';
+                      appData.isTheGameOver();
                       setState(() {});
                     }
                   },
