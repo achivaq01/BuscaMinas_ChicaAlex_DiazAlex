@@ -70,7 +70,7 @@ class WidgetTresRatllaState extends State<WidgetTresRatlla> {
                     final int col = (tappedX / cellDimension).floor();
                     final int row = (tappedY / cellDimension).floor();
 
-                    if(col >= 0 && row >= 0) {
+                    if(col >= 0 && col < dimensions && row >= 0 && row < dimensions) {
                       appData.revealCells(row, col);
                       appData.board[row][col][1] = 'C';
                       appData.isTheGameOver();
@@ -78,7 +78,7 @@ class WidgetTresRatllaState extends State<WidgetTresRatlla> {
                       setState(() {});
                     }
                   },
-                  onSecondaryTapUp: (TapUpDetails details) {
+                  onDoubleTapDown: (TapDownDetails details) {
                     if (appData.gameIsOver) {
                       return;
                     }
@@ -96,7 +96,8 @@ class WidgetTresRatllaState extends State<WidgetTresRatlla> {
                     final int col = (tappedX / cellDimension).floor();
                     final int row = (tappedY / cellDimension).floor();
 
-                    if(col >= 0 && row >= 0) {
+                    if(col >= 0 && col < dimensions && row >= 0 && row < dimensions) {
+                      appData.markedMines ++;
                       appData.board[row][col][1] = 'M';
                       appData.isTheGameOver();
                       setState(() {});

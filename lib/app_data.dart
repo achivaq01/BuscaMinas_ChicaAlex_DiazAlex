@@ -9,6 +9,7 @@ class AppData with ChangeNotifier {
   String winner = "Game over, you lost!";
 
   int mineAmount = 0;
+  int markedMines = 0;
   int gridDimensions = 0;
 
   List<List<List<String>>> board = [];
@@ -84,7 +85,7 @@ class AppData with ChangeNotifier {
         } else if (board[i][j][0] == '*' && board[i][j][1] == 'M') {
           markedMines++;
 
-          if(markedMines >= mineAmount) {
+          if(markedMines == mineAmount && this.markedMines == mineAmount) {
             winner = "Congratulations, you won!";
             gameIsOver = true;
           }
@@ -125,15 +126,13 @@ class AppData with ChangeNotifier {
       return;
     }
 
-    revealCells(row - 1, col - 1);
-    revealCells(row - 1, col);
-    revealCells(row - 1, col + 1);
-    revealCells(row, col - 1);
-    revealCells(row, col + 1);
-    revealCells(row + 1, col - 1);
-    revealCells(row + 1, col);
-    revealCells(row + 1, col + 1);
+    for (int i = -1; i <= 1; i++) {
+      for (int j = -1; j <= 1; j++) {
+        revealCells(row + i, col + j);
+      }
+    }
   }
+
 
 
   // Carrega les imatges per dibuixar-les al Canvas

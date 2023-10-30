@@ -71,18 +71,18 @@ class WidgetTresRatllaPainter extends CustomPainter {
       int nearMines = appData.nearMines(row, column);
 
       if (nearMines == 0) {return;}
-      drawNumberOnCanvas(canvas, appData.nearMines(row, column), x0, y0, paint, size);
+      drawStringOnCanvas(canvas, appData.nearMines(row, column).toString(), x0, y0, paint, size);
     }
   }
 
-  void drawNumberOnCanvas(Canvas canvas, int number, double x, double y, Paint paint, Size size) {
+  void drawStringOnCanvas(Canvas canvas, String string, double x, double y, Paint paint, Size size) {
     int dimensions = appData.gridDimensions;
     double smallerDimension = size.width < size.height ? size.width : size.height;
     double cellDimension = smallerDimension / (dimensions);
 
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
-        text: number.toString(),
+        text: string,
         style: TextStyle(
           color: Colors.black,
           fontSize: cellDimension * 0.5,
@@ -164,6 +164,7 @@ class WidgetTresRatllaPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     drawBoardStatus(canvas, size);
     drawBoardLines(canvas, size);
+    drawStringOnCanvas(canvas, "Mines: " + appData.markedMines.toString(), size.width / 10, size.height / 10, new Paint(), size);
     if (appData.gameIsOver) {
       drawGameOver(canvas, size);
     }
